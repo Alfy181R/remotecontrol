@@ -19,8 +19,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y zip unzip openjdk-17-jdk autoconf libtool \
-            pkg-config zlib1g-dev libncurses5-dev cmake libffi-dev libssl-dev git
+            pkg-config zlib1g-dev libncurses5-dev cmake libffi-dev libssl-dev git aidl
           pip install buildozer cython kivy paramiko setuptools
+
+      - name: Accept Android licenses
+        run: |
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          yes | sudo $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Build APK
         run: |
