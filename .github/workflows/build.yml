@@ -27,6 +27,7 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install buildozer cython kivy paramiko setuptools
+          pip install python-for-android
 
       - name: Fix sdkmanager and install NDK 25b
         run: |
@@ -41,10 +42,28 @@ jobs:
             "ndk;25.2.9519653" --sdk_root=/usr/local/lib/android/sdk
 
       - name: Build APK
-        run: buildozer android debug
+        env:
+          ANDROIDSDK: /usr/local/lib/android/sdk
+          ANDROIDNDK: /usr/local/lib/android/sdk/ndk/25.2.9519653
+          ANDROIDAPI: "31"
+          ANDROIDMINAPI: "21"
+        run: |
+          p4a apk \
+            --private . \
+            --package org.tuapp.controlremoto \
+            --name "Control Remoto" \
+            --version 0.1 \
+            --bootstrap sdl2 \
+            --requirements python3,kivy,paramiko \
+            --arch arm64-v8a \
+            --ndk-api 21 \
+            --sdk-dir /usr/local/lib/android/sdk \
+            --ndk-dir /usr/local/lib/android/sdk/ndk/25.2.9519653 \
+            2>&1
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: control-remoto-apk
-          path: bin/*.apk
+          path: "**/*.apk"
+          if-no-files-found: warn
