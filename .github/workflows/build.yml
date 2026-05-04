@@ -45,7 +45,7 @@ jobs:
         env:
           ANDROIDSDK: /usr/local/lib/android/sdk
           ANDROIDNDK: /usr/local/lib/android/sdk/ndk/25.2.9519653
-          ANDROIDAPI: "31"
+          ANDROIDAPI: "34"
           ANDROIDMINAPI: "21"
         run: |
           p4a apk \
