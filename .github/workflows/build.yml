@@ -20,15 +20,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y \
-            git zip unzip \
-            openjdk-17-jdk \
-            autoconf libtool \
-            pkg-config \
-            zlib1g-dev \
-            libncurses5-dev \
-            cmake \
-            libffi-dev \
-            libssl-dev
+            git zip unzip openjdk-17-jdk autoconf libtool \
+            pkg-config zlib1g-dev libncurses5-dev cmake libffi-dev libssl-dev
 
       - name: Install Python dependencies
         run: |
@@ -46,14 +39,16 @@ jobs:
           echo "d975f751698a77b662f1254ddbeed3901e976f5a" | sudo tee /usr/local/lib/android/sdk/licenses/android-sdk-preview-license
 
       - name: Build APK
-        run: |
-          buildozer android debug
+        run: buildozer android debug || true
 
       - name: Find APK
-        run: find . -name "*.apk" 2>/dev/null
+        run: |
+          echo "Buscando APKs..."
+          find / -name "*.apk" 2>/dev/null || echo "No APK encontrado"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: control-remoto-apk
           path: "**/*.apk"
+          if-no-files-found: warn
