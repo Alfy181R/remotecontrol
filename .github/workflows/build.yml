@@ -26,7 +26,9 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install --upgrade pip setuptools cython kivy paramiko
+          pip install --upgrade pip setuptools
+          pip install "cython==0.29.37"
+          pip install kivy paramiko
           pip install git+https://github.com/kivy/python-for-android.git
           pip install git+https://github.com/kivy/buildozer.git
 
@@ -43,11 +45,10 @@ jobs:
             "ndk;25.2.9519653" --sdk_root=/usr/local/lib/android/sdk
 
       - name: Build APK
-        run: buildozer android debug 2>&1 | tail -50
+        run: buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: control-remoto-apk
           path: bin/*.apk
-          if-no-files-found: warn
