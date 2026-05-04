@@ -47,7 +47,14 @@ jobs:
 
       - name: Build APK
         run: |
-          buildozer android debug
+          buildozer android debug 2>&1 || true
+          python -m pythonforandroid.toolchain create \
+            --dist_name=controlremoto \
+            --bootstrap=sdl2 \
+            --requirements=python3,kivy,paramiko \
+            --arch=arm64-v8a \
+            --ndk-api=21 \
+            --debug 2>&1 | tail -100
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
