@@ -12,6 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
         with:
@@ -21,7 +27,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y \
-            git zip unzip openjdk-17-jdk autoconf libtool \
+            git zip unzip autoconf libtool \
             pkg-config zlib1g-dev libncurses5-dev cmake libffi-dev libssl-dev
 
       - name: Install Python dependencies
@@ -44,10 +50,9 @@ jobs:
             "ndk;25.2.9519653" --sdk_root=/usr/local/lib/android/sdk
 
       - name: Build APK
+        env:
+          JAVA_HOME: /usr/lib/jvm/temurin-17-jdk-amd64
         run: buildozer android debug 2>&1 | tee build_full.log || true
-
-      - name: Show last error in log
-        run: grep -i "error\|exception\|traceback\|failed" build_full.log | tail -30
 
       - name: Upload logs and APK
         uses: actions/upload-artifact@v4
